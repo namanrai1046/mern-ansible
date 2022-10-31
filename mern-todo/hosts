@@ -1,0 +1,9 @@
+[ec2]
+54.146.155.51
+
+[ec2:vars]
+ansible_ssh_private_key_file=~/.ssh/practice.pem
+ansible_user=ubuntu
+
+[localhost]
+127.0.0.1

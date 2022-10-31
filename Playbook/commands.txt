@@ -1,0 +1,5 @@
+ansible-playbook -i hosts.yaml create_instance.yaml -t ec2_create
+ansible-inventory --graph
+ansible all -m ping
+ansible aws_region_us_east_1 -m ping
+ansible-playbook my-playbook.yaml

@@ -1,0 +1,35 @@
+---
+- name: ec2
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+      - name: import keypair
+        amazon.aws.ec2_key:
+          name: practice
+          key_material: "{{ lookup('file', 'practice.pub') }}"
+        tags:
+          - ec2_create
+          - ec2_keypair
+      - name: launch new instance
+        amazon.aws.ec2:
+          # name: foransible
+          region: us-east-1
+          key_name: practice
+          instance_type: t2.micro
+          group_id: sg-6ba2567a
+          vpc_subnet_id: subnet-6f4bb723
+          assign_public_ip: true
+          
+          image: ami-0149b2da6ceec4bb0 
+          user_data: "{{ lookup('file', 'user_data.sh') }}"
+          volumes: 
+            - device_name: /dev/xvda
+              volume_size: 8
+              volume_type: gp2
+              delete_on_termination: true
+          wait: yes
+          wait_timeout: 600
+          
+        tags:
+          - ec2_create

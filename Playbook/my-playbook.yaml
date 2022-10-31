@@ -1,0 +1,37 @@
+---
+- name: Scheduled Tasks
+  hosts: aws_region_us_east_1
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: "Update Repository cache"
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+      force_apt_get: true
+  - name: install Docker
+    apt:
+      name: docker.io
+      state: latest
+  - name: install Docker compose
+    apt:
+      name: docker-compose
+  - name: ZIP
+    apt:
+      name: zip
+  - name: Copy zipped source code folder to server
+    copy:
+      src: ../mern-todo.zip
+      dest: /home/ubuntu/mern-todo.zip
+  - name: unzip souce code folder
+    unarchive:
+      src: /home/ubuntu/mern-todo.zip
+      dest: /home/ubuntu/
+      remote_src: yes
+  - name: building container
+    args:
+      chdir: ./mern-todo
+    shell:
+      docker-compose build && docker-compose up && exit
+
+  
